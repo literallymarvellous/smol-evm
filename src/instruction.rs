@@ -2,13 +2,13 @@ use std::collections::HashMap;
 
 use crate::execution_context::ExecutionContext;
 
-pub trait Execute {
-    fn execute(&self, ctx: ExecutionContext);
-}
+// pub trait Execute {
+//     fn execute(&self, ctx: &mut ExecutionContext);
+// }
 
 pub struct Instruction {
-  pub instructions: Vec<Box<dyn Execute>>,
-  pub instructions_by_opcode: HashMap<u8, Box<dyn Execute>>
+  pub instructions: Vec<Opcode>,
+  pub instructions_by_opcode: HashMap<u8, Opcode>
 }
 
 impl Instruction {
@@ -21,37 +21,41 @@ impl Instruction {
 
   pub fn update(&mut self, opcode: Opcode) {
     let op = opcode.clone();
-    self.instructions.push(Box::new(opcode));
+    self.instructions.push(opcode);
     if !self.instructions_by_opcode.contains_key(&op.opcode) {
-      self.instructions_by_opcode.insert(op.opcode, Box::new(op));
+      self.instructions_by_opcode.insert(op.opcode, op);
     }
   }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct Opcode {
-    name: String,
-    opcode: u8,
-    f: fn(ExecutionContext)
+    pub name: String,
+    pub opcode: u8,
+    pub f: fn(&mut ExecutionContext)
 }
 
 impl Opcode {
-  pub fn new(opcode: u8, name: &str, f: fn(ExecutionContext)) -> Self {
+  pub fn new(opcode: u8, name: &str, f: fn(&mut ExecutionContext)) -> Self {
     Self {
       opcode,
       name: name.to_owned(),
       f
     }
   }
-}
 
-impl Execute for Opcode {
-  fn execute(&self, ctx: ExecutionContext) {
+  pub fn execute(&self, ctx: &mut ExecutionContext) {
     (self.f)(ctx);
   }
 }
 
-pub fn register_instruction(opcode: u8, name: &str, f: fn(ExecutionContext), instruction: &mut Instruction) {
+// impl Execute for Opcode {
+//     fn execute(&self, ctx: &mut ExecutionContext) {
+//     (self.f)(ctx);
+//   }
+// }
+
+pub fn register_instruction(opcode: u8, name: &str, f: fn(&mut ExecutionContext), instruction: &mut Instruction) {
     let op = Opcode::new(opcode, name, f);
     instruction.update(op);
 }

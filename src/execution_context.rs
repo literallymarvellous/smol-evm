@@ -2,7 +2,7 @@ use primitive_types::U256;
 
 use crate::{stack::Stack, memory::Memory};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ExecutionContext {
   pub code: Vec<u8>,
   pub stack: Stack,
