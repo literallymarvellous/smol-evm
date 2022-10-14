@@ -1,5 +1,3 @@
-use primitive_types::U256;
-
 use crate::{stack::Stack, memory::Memory};
 
 #[derive(Debug, Clone)]

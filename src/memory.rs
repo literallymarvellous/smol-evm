@@ -1,33 +1,21 @@
-use primitive_types::U256;
+use bytes::BytesMut;
 
-#[derive(Debug, Clone)]
-pub struct Memory {
-  memory: Vec<u8>
-}
+const PAGE_SIZE: usize = 4 * 1024;
+
+#[derive(Debug, Clone, Default)]
+pub struct Memory(BytesMut);
 
 impl Memory {
   pub fn new() -> Self {
-    Self {
-      memory: Vec::new()
-    }
+    Self(BytesMut::with_capacity(PAGE_SIZE))
   }
 
-  pub fn store(&mut self, offset: U256, value: u8) -> Result<(), &str> {
-    if offset.as_usize() >= self.memory.len() {
-
-      self.memory.extend([0; 32].iter())
+  pub fn grow(&mut self, size: usize) {
+    let cap = self.0.capacity();
+    if size > cap {
+        let required_pages = (size + PAGE_SIZE - 1) / PAGE_SIZE;
+        self.0.reserve((PAGE_SIZE * required_pages) - self.0.len());
     }
-
-    // self.memory[offset] = value;
-
-    Ok(())
-  }
-
-  pub fn load(&mut self, offset: U256) -> Result<u8, &str> {
-    if offset.as_usize() >= self.memory.len() {
-      return Ok(0);
-    }
-    todo!()
-    // self.memory[offset]
+    self.0.resize(size, 0);
   }
 }

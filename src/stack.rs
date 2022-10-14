@@ -1,44 +1,31 @@
-use primitive_types::H256;
+use arrayvec::ArrayVec;
+use ethnum::U256;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Default, Debug)]
 pub struct Stack {
-  stack: Vec<H256>,
-  max_depth: usize,
-}
-
-impl Default for Stack {
-  fn default() -> Self {
-    Self {
-      stack: Vec::new(),
-      max_depth: 1024
-    }
-  }
+  stack: ArrayVec<U256, 1024>,
 }
 
 impl Stack {
   pub fn new() -> Self {
     Self {
-      stack: Vec::new(),
-      max_depth: 1024
+      stack: ArrayVec::new(),
     }
   }
 
-  pub fn push(&mut self, item: H256) -> Result<(), &str> {
-    
-    if self.stack.len() + 1 > self.max_depth {
-      return Err("Stack Overflow")
-    } 
-
+  pub fn push(&mut self, item: U256) {
     self.stack.push(item);
-
-    Ok(())
   }
 
-  pub fn pop(&mut self) -> Result<Option<H256>, &str> {
-      if self.stack.len() == 0 {
-        return Err("Stack undeflow")
-      }
+  pub fn pop(&mut self) {
+      self.stack.pop();
+  }
 
-      Ok(self.stack.pop())
+  pub fn len(&self) -> usize {
+      self.stack.len()
+  }
+
+  pub fn is_empty(&self) -> bool {
+    self.stack.len() == 0
   }
 }
