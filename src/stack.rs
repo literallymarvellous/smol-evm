@@ -1,3 +1,5 @@
+use std::fmt;
+
 use arrayvec::ArrayVec;
 use ethnum::U256;
 
@@ -17,8 +19,8 @@ impl Stack {
     self.stack.push(item);
   }
 
-  pub fn pop(&mut self) {
-      self.stack.pop();
+  pub fn pop(&mut self) -> Option<U256> {
+      self.stack.pop()
   }
 
   pub fn len(&self) -> usize {
@@ -28,4 +30,10 @@ impl Stack {
   pub fn is_empty(&self) -> bool {
     self.stack.len() == 0
   }
+}
+
+impl fmt::Display for Stack {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "Stack: {:?}", self.stack)
+    }
 }

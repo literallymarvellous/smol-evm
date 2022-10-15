@@ -39,7 +39,7 @@ pub const PUSH_OPS: [Opcode; 32] = [
 // Source: https://github.com/huff-language/huff-rs/blob/main/huff_utils/src/evm.rs
 /// EVM Opcodes
 /// References <https://evm.codes>
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, EnumString, Display)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, EnumString)]
 #[strum(serialize_all = "lowercase")]
 pub enum Opcode {
     /// Halts execution.
@@ -793,15 +793,15 @@ impl Opcode {
     }
 }
 
-// impl fmt::Display for Opcode {
-//     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-//         let opcode_str = self.string();
-//         write!(f, "{}", opcode_str)
-//     }
-// }
+impl fmt::Display for Opcode {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let opcode_str = self.string();
+        write!(f, "{}", opcode_str)
+    }
+}
 
-// impl From<Opcode> for String {
-//     fn from(o: Opcode) -> Self {
-//         o.string()
-//     }
-// }
+impl From<Opcode> for String {
+    fn from(o: Opcode) -> Self {
+        o.string()
+    }
+}
