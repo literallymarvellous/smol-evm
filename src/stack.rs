@@ -30,6 +30,10 @@ impl Stack {
   pub fn is_empty(&self) -> bool {
     self.stack.len() == 0
   }
+
+  pub fn peek(&self) -> Option<&U256> {
+    self.stack.get(self.len() - 1)
+  }
 }
 
 impl fmt::Display for Stack {

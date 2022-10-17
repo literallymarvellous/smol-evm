@@ -5,3 +5,4 @@ pub mod memory;
 pub mod execution_context;
 pub mod instructions;
 pub mod opcodes;
+pub mod utils;

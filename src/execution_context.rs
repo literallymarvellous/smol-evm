@@ -1,6 +1,8 @@
-use bytes::Bytes;
+use std::error::Error;
 
-use crate::{stack::Stack, memory::Memory, opcodes::Opcode, instructions::{push1, add, mul, stop, mstore8, return_data}};
+use bytes::Bytes;
+use ethnum::U256;
+use crate::{stack::Stack, memory::Memory, opcodes::Opcode, instructions::{push1, push32, add, mul, stop, mstore8, return_data}};
 
 #[derive(Debug, Clone, Default)]
 pub struct ExecutionContext {
@@ -28,20 +30,31 @@ impl ExecutionContext {
     self.stopped = true;
   }
 
-  pub fn read_code(&mut self, num_bytes: usize) -> Result<u8, &str> {
-
+  pub fn read_code(&mut self, num_bytes: usize) -> u8 {
     if self.pc < self.code.len() {
         let start = self.pc;
         let end = self.pc + num_bytes;
         let value = &self.code[start..end];
 
         self.pc += num_bytes;
-        Ok(value[0])
+        value[0]
     } else {
-      Ok(0)
+      0u8
     }
+  }
 
+  pub fn read_push_code(&mut self, num_bytes: usize) -> Result<&[u8], &str> {
+    if self.pc + num_bytes <= self.code.len() {
+        let start = self.pc;
+        let end = self.pc + num_bytes;
+        let value = &self.code[start..end];
 
+        self.pc += num_bytes;
+        Ok(value)
+    } else {
+      Err("Code out of bounds")
+    }
+    
   }
 }
 
@@ -49,16 +62,17 @@ pub fn execute(context: &mut ExecutionContext) {
 
   while context.stopped == false {
         let pc_before = context.pc;
-        let opcode_str = match context.read_code(1) {
-          Ok(byte) => hex::encode([byte]),
-          Err(e) => panic!("Error reading code: {:?}", e),
-        };
+        let byte = context.read_code(1);
+        let opcode_str = hex::encode([byte]);
 
         let opcode = Opcode::new(&opcode_str);
 
         match opcode {
             Opcode::Push1 => {
               push1(context);
+            },
+            Opcode::Push32 => {
+              push32(context);
             },
             Opcode::Add =>  {
               add(&mut context.stack);
