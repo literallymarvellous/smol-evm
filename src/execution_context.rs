@@ -1,8 +1,6 @@
-use std::error::Error;
-
 use bytes::Bytes;
-use ethnum::U256;
-use crate::{stack::Stack, memory::Memory, opcodes::Opcode, instructions::{self, push1, push32, add, mul, stop, mstore8, return_data, push, mstore}};
+
+use crate::{stack::Stack, memory::Memory, opcodes::Opcode, instructions::{push1, push32, add, mul, stop, mstore8, return_data, push, mstore, jump, jumpi}};
 
 #[derive(Debug, Clone, Default)]
 pub struct ExecutionContext {
@@ -64,7 +62,7 @@ impl ExecutionContext {
       }
     } 
 
-    if value.len() == 0 {
+    if value.is_empty() {
       value.push(0);
     }
     
@@ -75,7 +73,7 @@ impl ExecutionContext {
 
 pub fn execute(context: &mut ExecutionContext) {
 
-  while context.stopped == false {
+  while !context.stopped {
         let pc_before = context.pc;
         let byte = context.read_code(1);
         let opcode_str = hex::encode([byte]);
@@ -119,6 +117,15 @@ pub fn execute(context: &mut ExecutionContext) {
             Opcode::Mstore =>  {
               mstore(context);
             },
+            Opcode::Jump => {
+              jump(context);
+            },
+            Opcode::Jumpi => {
+              jumpi(context);
+            },
+            Opcode::Jumpdest =>  {
+              continue;
+            },
             Opcode::Return =>  {
               return_data(context);
             },
@@ -128,10 +135,10 @@ pub fn execute(context: &mut ExecutionContext) {
         println!("{:?} @ pc={}", opcode.op_string(), pc_before);
         println!("{}", context.stack);
         println!("{}", context.memory);
-        println!("");
+        println!();
   }
 
-  let data = format!("{}{}", "0x", hex::encode(context.return_data.to_vec()));
+  let data = format!("{}{}", "0x", hex::encode(&context.return_data));
   println!("return data {:?} : {:?}", data, context.return_data.to_vec());
 
 }

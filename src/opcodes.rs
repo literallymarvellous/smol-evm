@@ -1,5 +1,5 @@
 use std::fmt;
-use strum_macros::{EnumString, Display};
+use strum_macros::{EnumString};
 
 pub const PUSH_OPS: [Opcode; 32] = [
     Opcode::Push1,
@@ -339,7 +339,8 @@ pub enum Opcode {
 impl Opcode {
     /// Translates a hex string into an Opcode
     pub fn new(string: &str) -> Self {
-        let opcode = match string {
+        
+        match string {
             "00" => Opcode::Stop,
             "01" => Opcode::Add,
             "02" => Opcode::Mul,
@@ -484,8 +485,7 @@ impl Opcode {
             "fe" => Opcode::Invalid,
             "ff" => Opcode::Selfdestruct,
             _ => Opcode::InvalidOpcode,
-        };
-        opcode
+        }
     }
 
     /// Translates an Opcode into a string
@@ -791,6 +791,158 @@ impl Opcode {
         };
         opcode_str.to_string()
     }
+
+    pub fn to_u8(&self) -> u8 {
+        let opocde_u8 = match self {
+            Opcode::Stop => hex::decode("00"),
+            Opcode::Add => hex::decode("01"),
+            Opcode::Mul => hex::decode("02"),
+            Opcode::Sub => hex::decode("03"),
+            Opcode::Div => hex::decode("04"),
+            Opcode::Sdiv => hex::decode("05"),
+            Opcode::Mod => hex::decode("06"),
+            Opcode::Smod => hex::decode("07"),
+            Opcode::Addmod => hex::decode("08"),
+            Opcode::Mulmod => hex::decode("09"),
+            Opcode::Exp => hex::decode("0a"),
+            Opcode::Signextend => hex::decode("0b"),
+            Opcode::Lt => hex::decode("10"),
+            Opcode::Gt => hex::decode("11"),
+            Opcode::Slt => hex::decode("12"),
+            Opcode::Sgt => hex::decode("13"),
+            Opcode::Eq => hex::decode("14"),
+            Opcode::Iszero => hex::decode("15"),
+            Opcode::And => hex::decode("16"),
+            Opcode::Or => hex::decode("17"),
+            Opcode::Xor => hex::decode("18"),
+            Opcode::Not => hex::decode("19"),
+            Opcode::Byte => hex::decode("1a"),
+            Opcode::Shl => hex::decode("1b"),
+            Opcode::Shr => hex::decode("1c"),
+            Opcode::Sar => hex::decode("1d"),
+            Opcode::Sha3 => hex::decode("20"),
+            Opcode::Address => hex::decode("30"),
+            Opcode::Balance => hex::decode("31"),
+            Opcode::Origin => hex::decode("32"),
+            Opcode::Caller => hex::decode("33"),
+            Opcode::Callvalue => hex::decode("34"),
+            Opcode::Calldataload => hex::decode("35"),
+            Opcode::Calldatasize => hex::decode("36"),
+            Opcode::Calldatacopy => hex::decode("37"),
+            Opcode::Codesize => hex::decode("38"),
+            Opcode::Codecopy => hex::decode("39"),
+            Opcode::Gasprice => hex::decode("3a"),
+            Opcode::Extcodesize => hex::decode("3b"),
+            Opcode::Extcodecopy => hex::decode("3c"),
+            Opcode::Returndatasize => hex::decode("3d"),
+            Opcode::Returndatacopy => hex::decode("3e"),
+            Opcode::Extcodehash => hex::decode("3f"),
+            Opcode::Blockhash => hex::decode("40"),
+            Opcode::Coinbase => hex::decode("41"),
+            Opcode::Timestamp => hex::decode("42"),
+            Opcode::Number => hex::decode("43"),
+            Opcode::Difficulty => hex::decode("44"),
+            Opcode::Prevrandao => hex::decode("44"),
+            Opcode::Gaslimit => hex::decode("45"),
+            Opcode::Chainid => hex::decode("46"),
+            Opcode::Selfbalance => hex::decode("47"),
+            Opcode::Basefee => hex::decode("48"),
+            Opcode::Pop => hex::decode("50"),
+            Opcode::Mload => hex::decode("51"),
+            Opcode::Mstore => hex::decode("52"),
+            Opcode::Mstore8 => hex::decode("53"),
+            Opcode::Sload => hex::decode("54"),
+            Opcode::Sstore => hex::decode("55"),
+            Opcode::Jump => hex::decode("56"),
+            Opcode::Jumpi => hex::decode("57"),
+            Opcode::Pc => hex::decode("58"),
+            Opcode::Msize => hex::decode("59"),
+            Opcode::Gas => hex::decode("5a"),
+            Opcode::Jumpdest => hex::decode("5b"),
+            Opcode::Push1 => hex::decode("60"),
+            Opcode::Push2 => hex::decode("61"),
+            Opcode::Push3 => hex::decode("62"),
+            Opcode::Push4 => hex::decode("63"),
+            Opcode::Push5 => hex::decode("64"),
+            Opcode::Push6 => hex::decode("65"),
+            Opcode::Push7 => hex::decode("66"),
+            Opcode::Push8 => hex::decode("67"),
+            Opcode::Push9 => hex::decode("68"),
+            Opcode::Push10 => hex::decode("69"),
+            Opcode::Push11 => hex::decode("6a"),
+            Opcode::Push12 => hex::decode("6b"),
+            Opcode::Push13 => hex::decode("6c"),
+            Opcode::Push14 => hex::decode("6d"),
+            Opcode::Push15 => hex::decode("6e"),
+            Opcode::Push16 => hex::decode("6f"),
+            Opcode::Push17 => hex::decode("70"),
+            Opcode::Push18 => hex::decode("71"),
+            Opcode::Push19 => hex::decode("72"),
+            Opcode::Push20 => hex::decode("73"),
+            Opcode::Push21 => hex::decode("74"),
+            Opcode::Push22 => hex::decode("75"),
+            Opcode::Push23 => hex::decode("76"),
+            Opcode::Push24 => hex::decode("77"),
+            Opcode::Push25 => hex::decode("78"),
+            Opcode::Push26 => hex::decode("79"),
+            Opcode::Push27 => hex::decode("7a"),
+            Opcode::Push28 => hex::decode("7b"),
+            Opcode::Push29 => hex::decode("7c"),
+            Opcode::Push30 => hex::decode("7d"),
+            Opcode::Push31 => hex::decode("7e"),
+            Opcode::Push32 => hex::decode("7f"),
+            Opcode::Dup1 => hex::decode("80"),
+            Opcode::Dup2 => hex::decode("81"),
+            Opcode::Dup3 => hex::decode("82"),
+            Opcode::Dup4 => hex::decode("83"),
+            Opcode::Dup5 => hex::decode("84"),
+            Opcode::Dup6 => hex::decode("85"),
+            Opcode::Dup7 => hex::decode("86"),
+            Opcode::Dup8 => hex::decode("87"),
+            Opcode::Dup9 => hex::decode("88"),
+            Opcode::Dup10 => hex::decode("89"),
+            Opcode::Dup11 => hex::decode("8a"),
+            Opcode::Dup12 => hex::decode("8b"),
+            Opcode::Dup13 => hex::decode("8c"),
+            Opcode::Dup14 => hex::decode("8d"),
+            Opcode::Dup15 => hex::decode("8e"),
+            Opcode::Dup16 => hex::decode("8f"),
+            Opcode::Swap1 => hex::decode("90"),
+            Opcode::Swap2 => hex::decode("91"),
+            Opcode::Swap3 => hex::decode("92"),
+            Opcode::Swap4 => hex::decode("93"),
+            Opcode::Swap5 => hex::decode("94"),
+            Opcode::Swap6 => hex::decode("95"),
+            Opcode::Swap7 => hex::decode("96"),
+            Opcode::Swap8 => hex::decode("97"),
+            Opcode::Swap9 => hex::decode("98"),
+            Opcode::Swap10 => hex::decode("99"),
+            Opcode::Swap11 => hex::decode("9a"),
+            Opcode::Swap12 => hex::decode("9b"),
+            Opcode::Swap13 => hex::decode("9c"),
+            Opcode::Swap14 => hex::decode("9d"),
+            Opcode::Swap15 => hex::decode("9e"),
+            Opcode::Swap16 => hex::decode("9f"),
+            Opcode::Log0 => hex::decode("a0"),
+            Opcode::Log1 => hex::decode("a1"),
+            Opcode::Log2 => hex::decode("a2"),
+            Opcode::Log3 => hex::decode("a3"),
+            Opcode::Log4 => hex::decode("a4"),
+            Opcode::Create => hex::decode("f0"),
+            Opcode::Call => hex::decode("f1"),
+            Opcode::Callcode => hex::decode("f2"),
+            Opcode::Return => hex::decode("f3"),
+            Opcode::Delegatecall => hex::decode("f4"),
+            Opcode::Create2 => hex::decode("f5"),
+            Opcode::Staticcall => hex::decode("fa"),
+            Opcode::Revert => hex::decode("fd"),
+            Opcode::Invalid => hex::decode("fe"),
+            Opcode::Selfdestruct => hex::decode("ff"),
+            Opcode::InvalidOpcode => hex::decode("xx"),
+        };
+
+        opocde_u8.unwrap()[0]
+    }
 }
 
 impl fmt::Display for Opcode {
@@ -803,5 +955,11 @@ impl fmt::Display for Opcode {
 impl From<Opcode> for String {
     fn from(o: Opcode) -> Self {
         o.string()
+    }
+}
+
+impl From<Opcode> for u8 {
+    fn from(o: Opcode) -> Self {
+        o.to_u8()
     }
 }

@@ -1,6 +1,6 @@
 use std::fmt;
 
-use bytes::{BytesMut, BufMut, Bytes};
+use bytes::{BytesMut, BufMut};
 use ethnum::U256;
 
 const PAGE_SIZE: usize = 4 * 1024;
@@ -18,7 +18,7 @@ impl Memory {
   }
 
   pub fn store(&mut self, offset: usize, value: U256, range: usize) {
-    if (self.0.len() == 0) || ((range == 32) & (offset > 0)) {
+    if self.0.is_empty() || ((range == 32) & (offset > 0)) {
       self.grow();
     }
 

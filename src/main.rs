@@ -1,6 +1,6 @@
 use std::env;
-use bytes::{BytesMut, BufMut, Bytes};
-use ethnum::U256;
+
+
 use smol_evm::execution_context::{ExecutionContext, execute};
 mod utils;
 use utils::str_to_vec;
