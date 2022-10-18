@@ -1,6 +1,6 @@
 use bytes::Bytes;
 
-use crate::{stack::Stack, memory::Memory, opcodes::Opcode, instructions::{push1, push32, add, mul, stop, mstore8, return_data, push, mstore, jump, jumpi}};
+use crate::{stack::Stack, memory::Memory, opcodes::Opcode, instructions::{push1, push32, add, mul, stop, mstore8, return_data, push, mstore, jump, jumpi, dup, swap, sub}};
 
 #[derive(Debug, Clone, Default)]
 pub struct ExecutionContext {
@@ -99,14 +99,104 @@ pub fn execute(context: &mut ExecutionContext) {
             Opcode::Push6 => {
               push::<6>(context);
             },
+            Opcode::Push7 => {
+              push::<7>(context);
+            },
+            Opcode::Push8 => {
+              push::<8>(context);
+            },
+            Opcode::Push9 => {
+              push::<9>(context);
+            },
+            Opcode::Push10 => {
+              push::<10>(context);
+            },
+            Opcode::Push11 => {
+              push::<11>(context);
+            },
+            Opcode::Push12 => {
+              push::<12>(context);
+            },
+            Opcode::Push13 => {
+              push::<13>(context);
+            },
+            Opcode::Push14 => {
+              push::<14>(context);
+            },
+            Opcode::Push15 => {
+              push::<15>(context);
+            },
+            Opcode::Push16 => {
+              push::<16>(context);
+            },
+            Opcode::Push17 => {
+              push::<17>(context);
+            },
+            Opcode::Push18 => {
+              push::<18>(context);
+            },
+            Opcode::Push19 => {
+              push::<19>(context);
+            },
+            Opcode::Push20 => {
+              push::<20>(context);
+            },
+            Opcode::Push21 => {
+              push::<21>(context);
+            },
+            Opcode::Push22 => {
+              push::<22>(context);
+            },
+            Opcode::Push23 => {
+              push::<23>(context);
+            },
+            Opcode::Push24 => {
+              push::<24>(context);
+            },
+            Opcode::Push25 => {
+              push::<25>(context);
+            }, 
+            Opcode::Push26 => {
+              push::<26>(context);
+            },
+            Opcode::Push27 => {
+              push::<27>(context);
+            },
+            Opcode::Push28 => {
+              push::<28>(context);
+            },
+            Opcode::Push29 => {
+              push::<29>(context);
+            },
+            Opcode::Push30 => {
+              push::<30>(context);
+            },
+            Opcode::Push31 => {
+              push::<31>(context);
+            },
             Opcode::Push32 => {
               push32(context);
+            },
+            Opcode::Dup1 => {
+              dup::<1>(&mut context.stack);
+            },
+            Opcode::Dup2 => {
+              dup::<2>(&mut context.stack);
+            },
+            Opcode::Dup3 => {
+              dup::<3>(&mut context.stack)
+            },
+            Opcode::Swap1 => {
+              swap::<1>(&mut context.stack);
             },
             Opcode::Add =>  {
               add(&mut context.stack);
             },
             Opcode::Mul =>  {
               mul(&mut context.stack);
+            },
+            Opcode::Sub => {
+              sub(&mut context.stack)
             },
             Opcode::Stop => {
               stop(context);

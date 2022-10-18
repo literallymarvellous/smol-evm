@@ -23,4 +23,5 @@ pub fn return_data(context: &mut ExecutionContext) {
 
     let data = context.memory.load(offset.as_usize(), length.as_usize());
     context.return_data = Bytes::from(data);
+    context.stop();
 }

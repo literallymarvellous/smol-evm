@@ -31,8 +31,14 @@ impl Stack {
     self.stack.len() == 0
   }
 
-  pub fn peek(&self) -> Option<&U256> {
-    self.stack.get(self.len() - 1)
+  pub fn get(&self, pos: usize) -> Option<&U256> {
+    self.stack.get(self.len() - 1 - pos)
+  }
+
+  pub fn swap_top(&mut self, pos: usize) {
+      let top = self.len() - 1;
+      let swap_pos = self.len() - 1 - pos;
+      self.stack.swap(top, swap_pos);
   }
 }
 

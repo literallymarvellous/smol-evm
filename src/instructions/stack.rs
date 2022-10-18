@@ -24,6 +24,7 @@ pub fn push32(context: &mut ExecutionContext) {
     }
 }
 
+// source: https://github.com/akula-bft/akula/blob/master/src/execution/evm/instructions/stack_manip.rs
 pub fn push<const LEN: usize>(context: &mut ExecutionContext) {
     match context.read_push_code(LEN) {
       Ok(v) => {
@@ -36,6 +37,17 @@ pub fn push<const LEN: usize>(context: &mut ExecutionContext) {
 
 pub fn pop(stack: &mut Stack) {
     stack.pop();
+}
+
+//source: https://github.com/akula-bft/akula/blob/master/src/execution/evm/instructions/stack_manip.rs
+pub fn dup<const HEIGHT: usize>(stack: &mut Stack) {
+  let v = stack.get(HEIGHT - 1).unwrap();
+  stack.push(*v);
+}
+
+// source: //source: https://github.com/akula-bft/akula/blob/master/src/execution/evm/instructions/stack_manip.rs
+pub(crate) fn swap<const HEIGHT: usize>(stack: &mut Stack) {
+    stack.swap_top(HEIGHT);
 }
 
 #[cfg(test)]
@@ -56,7 +68,7 @@ mod tests {
         push1(&mut ctx);
 
         let i = U256::from(bytecode[0]);
-        assert_eq!(&i, ctx.stack.peek().unwrap());
+        assert_eq!(&i, ctx.stack.get(0).unwrap());
     }
 
     #[test]

@@ -24,10 +24,8 @@ impl Memory {
 
     match range {
       1 => {
-        println!("by {:?}", &value.to_be_bytes());
         let vb = &value.to_be_bytes()[31..32];
-        println!("v {:?}", vb);
-        println!("offset {:?}", offset);
+
         self.0[offset..1].copy_from_slice(vb);
       },
       32 => {
