@@ -15,7 +15,7 @@ pub fn push1(context: &mut ExecutionContext) {
 }
 
 pub fn push32(context: &mut ExecutionContext) {
-    match context.read_push_code(1) {
+    match context.read_push_code(32) {
       Ok(v) => {
         let value = U256::from_be_bytes(v.try_into().unwrap());
         context.stack.push(value);
@@ -27,7 +27,7 @@ pub fn push32(context: &mut ExecutionContext) {
 pub fn push<const LEN: usize>(context: &mut ExecutionContext) {
     match context.read_push_code(LEN) {
       Ok(v) => {
-        let v_u256 = vec_u8_to_u256(v);
+        let v_u256 = vec_u8_to_u256(&v);
         context.stack.push(v_u256);
       }
       Err(_) => stop(context)

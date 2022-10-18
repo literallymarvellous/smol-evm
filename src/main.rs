@@ -14,3 +14,4 @@ fn main() {
     let mut execution_context = ExecutionContext::new(bytecode);
     execute(&mut execution_context);
 }
+

@@ -2,7 +2,7 @@ use std::error::Error;
 
 use bytes::Bytes;
 use ethnum::U256;
-use crate::{stack::Stack, memory::Memory, opcodes::Opcode, instructions::{push1, push32, add, mul, stop, mstore8, return_data}};
+use crate::{stack::Stack, memory::Memory, opcodes::Opcode, instructions::{self, push1, push32, add, mul, stop, mstore8, return_data, push, mstore}};
 
 #[derive(Debug, Clone, Default)]
 pub struct ExecutionContext {
@@ -43,18 +43,33 @@ impl ExecutionContext {
     }
   }
 
-  pub fn read_push_code(&mut self, num_bytes: usize) -> Result<&[u8], &str> {
-    if self.pc + num_bytes <= self.code.len() {
-        let start = self.pc;
-        let end = self.pc + num_bytes;
-        let value = &self.code[start..end];
+  pub fn read_push_code(&mut self, num_bytes: usize) -> Result<Vec<u8>, &str> {
+    let mut value = Vec::new();
+    
+    let mut count: usize = 0;
 
-        self.pc += num_bytes;
-        Ok(value)
-    } else {
-      Err("Code out of bounds")
+    loop {
+      count += 1;
+
+      if self.pc == self.code.len() {
+        break;
+      }
+
+      let byte = &self.code[self.pc..self.pc + 1];
+      value.push(byte[0]);
+      self.pc += 1;
+
+      if count == num_bytes {
+        break;
+      }
+    } 
+
+    if value.len() == 0 {
+      value.push(0);
     }
     
+    Ok(value)
+
   }
 }
 
@@ -71,6 +86,21 @@ pub fn execute(context: &mut ExecutionContext) {
             Opcode::Push1 => {
               push1(context);
             },
+            Opcode::Push2 => {
+              push::<2>(context);
+            },
+            Opcode::Push3 => {
+              push::<3>(context);
+            },
+            Opcode::Push4 => {
+              push::<4>(context);
+            },
+            Opcode::Push5 => {
+              push::<5>(context);
+            },
+            Opcode::Push6 => {
+              push::<6>(context);
+            },
             Opcode::Push32 => {
               push32(context);
             },
@@ -85,6 +115,9 @@ pub fn execute(context: &mut ExecutionContext) {
             },
             Opcode::Mstore8 =>  {
               mstore8(context);
+            },
+            Opcode::Mstore =>  {
+              mstore(context);
             },
             Opcode::Return =>  {
               return_data(context);
